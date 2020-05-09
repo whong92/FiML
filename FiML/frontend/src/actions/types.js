@@ -2,6 +2,7 @@ export const FILMS_GET = 'FILMS_GET';
 export const RATINGS_GET = 'RATINGS_GET';
 export const RATINGS_ADD = 'RATINGS_ADD';
 export const RATINGS_PUT = 'RATINGS_PUT';
+export const RECOMMENDS_GET = 'RECOMMENDS_GET';
 
 // errors and messages
 export const GET_ERRORS = 'GET_ERRORS';

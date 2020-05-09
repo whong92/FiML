@@ -4,6 +4,7 @@ import ratingReducer from './ratings'
 import authReducer from './auth'
 import errorReducer from './errors'
 import messageReducer from './messages'
+import recReducer from './recommends'
 
 export default combineReducers({
     films: filmReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
     auth: authReducer,
     errors: errorReducer,
     message: messageReducer,
+    recommends: recReducer,
 });

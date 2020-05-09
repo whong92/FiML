@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import {connect} from 'react-redux'
 import {getFilms} from '../../actions/films'
+import {getRecommends} from '../../actions/recommends'
 import PropTypes from 'prop-types'
 
 class RankTable extends Component {
@@ -14,16 +15,35 @@ class RankTable extends Component {
         this.props.getFilms()
     }
 
+
     render() {
         
-        const films = this.props.films.map(
-            film => (
-            <tr key={ film.id }>
-                <td>{ film.id }</td>
-                <td>{ film.name }</td>
-            </tr>
+        const {films, recommends} = this.props
+        var disp = null
+        if (recommends != null) {
+            const { dist, rec } = recommends
+            if (films.length > 0){
+                disp = rec.map( 
+                    (r, i) => (
+                    <tr key={ films[r].id }>
+                        <td>{ films[r].id }</td>
+                        <td>{ films[r].name }</td>
+                        <td>{ dist[i] }</td>
+                    </tr>
+                    )
+                )
+            }
+        } else {
+            disp = films.slice(0,100).map( 
+                film => (
+                <tr key={ film.id }>
+                    <td>{ film.id }</td>
+                    <td>{ film.name }</td>
+                    <td>{ 0 }</td>
+                </tr>
+                )
             )
-        )
+        }
 
         return (
             <Fragment>
@@ -33,10 +53,11 @@ class RankTable extends Component {
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Score</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {films}
+                        {disp}
                     </tbody>
                 </table>
             </Fragment>
@@ -45,7 +66,10 @@ class RankTable extends Component {
 }
 
 const mapStateToProps = state => ({
+    user: state.auth.user,
     films: state.films.films,
+    recommends: state.recommends.recommends,
+    ratings: state.ratings.ratings
 });
 
-export default connect(mapStateToProps, {getFilms})(RankTable);
+export default connect(mapStateToProps, {getFilms, getRecommends})(RankTable);

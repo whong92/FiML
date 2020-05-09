@@ -12,7 +12,7 @@ const ratingReducer = function(state=intialState, action){
                 action.payload.forEach(r => ratings[r.film] = r)
                 return {
                     ...state,
-                    ratings: ratings
+                    ratings: {...ratings}
                 }
             }
         case RATINGS_ADD:
@@ -22,7 +22,7 @@ const ratingReducer = function(state=intialState, action){
                 ratings[action.payload.film] = action.payload
                 return {
                     ...state,
-                    ratings: ratings
+                    ratings: {...ratings}
                 }
             }
         default:

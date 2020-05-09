@@ -2,38 +2,15 @@ import React, { Component, Fragment } from 'react';
 import {connect} from 'react-redux'
 import Select, { createFilter } from 'react-select';
 import {getFilms} from '../../actions/films'
-import {getRatings, addRatings, putRatings} from '../../actions/ratings'
+import FilmRater from '../film/FilmRater'
 
 const CustomOption = ({ innerProps, data, isFocused, children }) => {
     // console.log(data.value, isFocused, children, data.slogan)
     return <div {...innerProps}>{children}</div>
 };
 
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 
 import { FixedSizeList as List } from "react-window";
-
-class RadioButtonsGroup extends Component {
-
-    render() {
-        const labelList = this.props.labels.map(
-            label => (<FormControlLabel value={label.value} control={<Radio />} label={label.label} key={label.label}/>)
-        )
-        return (
-            <FormControl component="fieldset">
-            <FormLabel component="legend">{this.props.title}</FormLabel>
-            <RadioGroup aria-label="gender" name="gender1" onChange={this.props.handleChange}>
-                {labelList}
-            </RadioGroup>
-            </FormControl>
-        );
-    }
-
-}
 
 const height = 35;
 
@@ -42,7 +19,8 @@ class MenuList extends Component {
       const { options, children, maxHeight, getValue } = this.props;
       const [value] = getValue();
       const initialOffset = options.indexOf(value) * height;
-      const short_children = children.slice(0,10) // limit size of menu to 10... seems to work!?
+      // need to test if children has a length property since it doesn't pass an empty list if children is empty
+      const short_children = children.length==null ? [] : children.slice(0,10) // limit size of menu to 10... seems to work!?
   
       return (
         <List
@@ -72,50 +50,13 @@ class Searchbar extends Component {
 
     componentDidMount() {
         this.props.getFilms()
-        this.props.getRatings()
     }
 
     
-    handleRated = (event) => {
-        console.log(event.target.value, this.state.selectedOption, this.props.ratings)
-        const rating = Number(event.target.value)
-        const film = this.state.selectedOption.film
-        const ratings = this.props.ratings
-
-        // console.log(ratings[film.id])
-
-        if (!(film.dataset_id in ratings)) {
-            this.props.addRatings({
-                film: film.dataset_id,
-                rating: rating,
-            })
-        } else {
-            this.props.putRatings({
-                id: ratings[film.dataset_id].id,
-                rating: rating,
-                film: film.dataset_id,
-            })
-        }
-    };
-    
     render() {
 
-        console.log("re-rendering")
-
         const { selectedOption } = this.state;
-        const labels = [
-            {label: "Good", value: "5.0"},
-            {label: "Medium", value: "2.5"},
-            {label: "Bad", value: "0.0"},
-        ]
-
-        // TODO: put this in own component
-        const form = this.state.selectedOption === null ? null : (
-            <Fragment>
-            <h3>{this.state.selectedOption.film.name}</h3>
-            <RadioButtonsGroup labels={labels} title="Please choose your rating" handleChange={this.handleRated}/>
-            </Fragment>
-        )
+        const form = (selectedOption==null ? null : <FilmRater film={selectedOption.film} />)
 
         return (
             <Fragment>
@@ -135,7 +76,6 @@ class Searchbar extends Component {
 
 const mapStateToProps = state => ({
     films: state.films.films,
-    ratings: state.ratings.ratings
 });
 
-export default connect(mapStateToProps, {getFilms, getRatings, addRatings, putRatings})(Searchbar);
+export default connect(mapStateToProps, {getFilms})(Searchbar);

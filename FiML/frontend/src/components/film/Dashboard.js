@@ -1,12 +1,29 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, Component } from 'react';
 import RankTable from './RankTable'
 import Searchbar from '../layout/Searchbar'
+import {connect} from 'react-redux'
+import {getRecommends} from '../../actions/recommends'
 
-export default function Dashboard(){
-    return (
-        <Fragment>
-            <Searchbar />
-            <RankTable />
-        </Fragment>
-    );
+
+class Dashboard extends Component{
+
+    componentDidUpdate() {
+        const {user} = this.props
+        if (user!=null) {this.props.getRecommends(user.id)}
+    }
+
+    render(){
+        return (
+            <Fragment>
+                <Searchbar />
+                <RankTable />
+            </Fragment>
+        );
+    }
 }
+
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
+export default connect(mapStateToProps, {getRecommends})(Dashboard);

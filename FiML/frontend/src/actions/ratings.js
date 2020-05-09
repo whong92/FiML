@@ -14,9 +14,11 @@ export const getRatings = () => (dispatch, getState) => {
                 })
             }
         )
-        .catch(e=>dispatch(createError(
-            e.response.data, e.response.status
-        )))
+        .catch(e=>{
+            dispatch(createError(
+                e.response.data, e.response.status
+            ))
+        })
 }
 
 export const addRatings = (ratingToAdd) => (dispatch, getState) => {

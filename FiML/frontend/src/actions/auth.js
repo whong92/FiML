@@ -68,6 +68,7 @@ export const logout = () => (dispatch, getState) => {
     axios.post('/api/auth/logout', null, tokenConfig(getState))
         .then(res => dispatch({type: LOGOUT_SUCCESS}))
         .catch( e => {
+            console.log(e.response.Status)
             dispatch(createError(e.response.data, e.response.Status))
         })    
 }
