@@ -17,6 +17,9 @@ import {loadUser} from '../actions/auth'
 import {Provider as AlertProvider} from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
 
+import {grey } from '@material-ui/core/colors';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 const alertOptions = {
     timeout: 3000,
     position: 'top center'
@@ -29,8 +32,29 @@ export default class App extends Component {
     }
 
     render() {
+
+        const theme = createMuiTheme({
+            palette: {
+                primary: {
+                    light: '#757ce8',
+                    main: '#3f50b5',
+                    dark: '#002884',
+                    contrastText: '#fff',
+                  },
+                secondary: {
+                    light: grey[100],
+                    main: grey[300],
+                    dark: grey[600],
+                    contrastText: '#fff',
+                },
+              },
+            typography: {
+              fontSize: 12,
+            },
+          });
         
         return (
+            <ThemeProvider theme={theme}>
             <Provider store={ store }>
             <AlertProvider template={AlertTemplate} {...alertOptions}>
                 <Router>
@@ -45,6 +69,8 @@ export default class App extends Component {
                 </Router>
             </AlertProvider>
             </Provider>
+            </ThemeProvider>
+
         )
     }
 }

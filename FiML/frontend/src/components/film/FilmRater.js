@@ -11,81 +11,90 @@ import FormLabel from '@material-ui/core/FormLabel';
 import {getRatings, addRatings, putRatings} from '../../actions/ratings'
 import {updateUser} from '../../actions/recommends'
 
+import { green, yellow, amber, orange, deepOrange, red, blue, pink, white, grey } from '@material-ui/core/colors';
+import { withStyles, ThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+
+
+function ColoredRadio (cprops) { // function component
+    const {c} = cprops
+    const StyledRadio = withStyles({
+        root: {
+            color: c,
+            '&$checked': {
+                color: c,
+            },
+        },
+        checked: {},
+    })((props) => <Radio color="default" {...props} />)
+    return <StyledRadio {...cprops}/>
+};
 
 class RadioButtonsGroup extends Component {
 
     render() {
         const labelList = this.props.labels.map(
-            label => (<FormControlLabel value={label.value} control={<Radio />} label={label.label} key={label.value} labelPlacement="bottom" />)
-        )
+        label => {
+            const CRadioComp = <ColoredRadio c={label.color}/>
+            return <FormControlLabel color="secondary.contrastText" value={label.value} control={CRadioComp} label={label.label} key={label.value} labelPlacement="bottom" />
+        })
+
         return (
-            <FormControl component="fieldset">
-            <FormLabel component="legend">{this.props.title}</FormLabel>
-            <RadioGroup row aria-label="gender" name="gender1" onChange={this.props.handleChange}>
-                {labelList}
-            </RadioGroup>
-            </FormControl>
+            <div>
+                <FormControl component="fieldset">
+                {this.props.title}
+                <RadioGroup row aria-label="rating" name="rating" onChange={this.props.handleChange} value={this.props.value}>
+                    {labelList}
+                </RadioGroup>
+                </FormControl>
+            </div>
         );
     }
 
 }
 
 const labels = [
-    {label: "Excellent", value: "5.0"},
-    {label: "", value: "4.5"},
-    {label: "Good", value: "4.0"},
-    {label: "", value: "3.5"},
-    {label: "Whatever", value: "3.0"},
-    {label: "", value: "2.5"},
-    {label: "Not great", value: "2.0"},
-    {label: "", value: "1.5"},
-    {label: "Awful", value: "1.0"},
+    {label: "Excellent", value: 5, color:green[900]},
+    {label: "", value: 4.5, color:green[700]},
+    {label: "Good", value: 4, color:green[500]},
+    {label: "", value: 3.5, color:green[300]},
+    {label: "Whatever", value: 3, color:yellow[300]},
+    {label: "", value: 2.5, color:amber[600]},
+    {label: "Not great", value: 2, color: orange[600]},
+    {label: "", value: 1.5, color: deepOrange[600]},
+    {label: "Awful", value: 1, color: red[600]},
 ]
 
-// some default stuff I copied from material ui's site
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 500,
-  },
-  margin: {
-    height: theme.spacing(3),
-  },
-}));
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
 
-const marks = labels;
-
-function valuetext(value) {
-  return `${value}`;
-}
-
-const divStyle = {
-    marginLeft: '10%',
-};  
-
-function DiscreteSlider({handleChange, initialValue}) {
-    const classes = useStyles();
-    return (
-        <div className={classes.root} style={divStyle}>
-        <Typography id="discrete-slider-custom" gutterBottom>
-            Rate it
-        </Typography>
-        <Slider
-            max={5}
-            min={1}
-            value={initialValue==null ? 3.0 : initialValue.rating}
-            getAriaValueText={valuetext}
-            aria-labelledby="discrete-slider-custom"
-            step={0.5}
-            valueLabelDisplay="auto"
-            marks={marks}
-            onChange={handleChange}
-        />
-        </div>
-    );
+const styles = {
+    root: {
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        padding: '20px'
+    },
+    details: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: '20px',
+        marginRight: '20px'
+    },
+    content: {
+        flex: '1 0 auto',
+    },
+    cover: {
+        width: 150,
+    },
+    controls: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '20px'
+    },
 }
 
 class FilmRater extends Component {
@@ -124,17 +133,36 @@ class FilmRater extends Component {
 
     render() {
 
+        console.log(film)
+
+        const { film, ratings, classes } = this.props
+        const rating = ratings[film.dataset_id]
+        const initalRating = rating==null ? null : rating.rating
+
         return (
             <div>
-                <Fragment>
-                    <h3>{this.props.film.name}</h3>
-                    <RadioButtonsGroup labels={labels} title="Please choose your rating" handleChange={this.handleRated}/>
-                    {/* <DiscreteSlider handleChange={this.handleRated} initialValue={ratings[film.dataset_id]}/> */}
-                </Fragment>
+                <Card className={classes.root}>
+
+                <CardMedia
+                    className={classes.cover}
+                    image={film.poster}
+                    title="Live from space album cover"
+                />
+                    
+                <div className={classes.details}>
+                <CardContent className={classes.content} ><h3>{this.props.film.name}</h3></CardContent>
+                <CardActions className={classes.controls} >
+                    <RadioButtonsGroup labels={labels} title="Please choose your rating" handleChange={this.handleRated} value={initalRating}/>
+                </CardActions>
+                </div>
+
+                </Card>
             </div>
         )
     }
 }
+
+const StyledFilmRater = withStyles(styles)(FilmRater)
 
 
 const mapStateToProps = state => ({
@@ -142,4 +170,4 @@ const mapStateToProps = state => ({
     user: state.auth.user
 });
 
-export default connect(mapStateToProps, {getRatings, addRatings, putRatings, updateUser})(FilmRater);
+export default connect(mapStateToProps, {getRatings, addRatings, putRatings, updateUser})(StyledFilmRater);

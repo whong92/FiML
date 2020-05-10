@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import RankTable from './RankTable'
+import RankGrid from './RankTable'
 import Searchbar from '../layout/Searchbar'
 import {connect} from 'react-redux'
 import {getRecommends} from '../../actions/recommends'
@@ -16,7 +16,7 @@ class Dashboard extends Component{
         return (
             <Fragment>
                 <Searchbar />
-                <RankTable />
+                <RankGrid />
             </Fragment>
         );
     }
