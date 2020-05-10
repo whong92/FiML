@@ -9,7 +9,7 @@ const filmReducer = function(state=intialState, action){
         case FILMS_GET:
             return {
                 ...state,
-                films: action.payload
+                films: action.payload.map(f=>({name: f.name, dataset_id: f.dataset_id, poster: f.poster}))
             }
         default:
             return state

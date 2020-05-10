@@ -108,7 +108,7 @@ class RankGrid extends Component {
         return (
             <Fragment>
                 <h1>FiML</h1>
-                <div class="d-flex space-evenly flex-wrap" style={style}>
+                <div class="d-flex flex-wrap" style={style}>
                     {disp}
                 </div>
             </Fragment>
