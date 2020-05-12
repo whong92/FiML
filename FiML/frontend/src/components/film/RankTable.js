@@ -56,7 +56,7 @@ class FilmCard extends Component {
                 <CardMedia className={classes.media}
                     component="img"
                     width="10"
-                    image={film.poster}
+                    image={ film.poster!=null ? film.poster : "/static/images/cards/poster_placeholder.jpg" }
                     title="film poster"
                 />
                 <CardContent className={classes.content} >{film.name}</CardContent>
@@ -108,7 +108,7 @@ class RankGrid extends Component {
         return (
             <Fragment>
                 <h1>FiML</h1>
-                <div class="d-flex flex-wrap" style={style}>
+                <div className="d-flex flex-wrap" style={style}>
                     {disp}
                 </div>
             </Fragment>

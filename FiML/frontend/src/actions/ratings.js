@@ -4,7 +4,6 @@ import {createMessage, createError} from './messages'
 import { tokenConfig } from './auth'
 
 export const getRatings = () => (dispatch, getState) => {
-
     axios.get('/backend/api/ratings/', tokenConfig(getState))
         .then(
             res => {

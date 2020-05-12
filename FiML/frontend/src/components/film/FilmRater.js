@@ -133,11 +133,12 @@ class FilmRater extends Component {
 
     render() {
 
-        console.log(film)
-
         const { film, ratings, classes } = this.props
         const rating = ratings[film.dataset_id]
         const initalRating = rating==null ? null : rating.rating
+
+        console.log(film)
+
 
         return (
             <div>

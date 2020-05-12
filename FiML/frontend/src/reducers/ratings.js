@@ -1,4 +1,4 @@
-import { RATINGS_GET, RATINGS_ADD, RATINGS_PUT } from '../actions/types.js'
+import { RATINGS_GET, RATINGS_ADD, RATINGS_PUT, LOGOUT_SUCCESS } from '../actions/types.js'
 
 const intialState = {
     ratings: {}
@@ -10,6 +10,7 @@ const ratingReducer = function(state=intialState, action){
             {
                 let ratings = {}
                 action.payload.forEach(r => ratings[r.film] = r)
+                console.log(ratings)
                 return {
                     ...state,
                     ratings: {...ratings}
@@ -24,6 +25,11 @@ const ratingReducer = function(state=intialState, action){
                     ...state,
                     ratings: {...ratings}
                 }
+            }
+        case LOGOUT_SUCCESS:
+            return {
+                ...state,
+                ratings: null
             }
         default:
             return state

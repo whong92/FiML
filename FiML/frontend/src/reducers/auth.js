@@ -43,7 +43,8 @@ export default function(state = initialState, action) {
                 isLoading: false
             }
         case LOGIN_SUCCESS:
-        case REGISTER_SUCCESS:
+            action.payload.token = action.payload.auth_token // change name auth_token -> token
+            delete action.payload.auth_token;
             localStorage.setItem('token', action.payload.token)
             return {
                 ...state,
@@ -51,6 +52,7 @@ export default function(state = initialState, action) {
                 isAuthenticated: true,
                 isLoading: false
             }
+        case REGISTER_SUCCESS:
         default: 
             return state;
     }

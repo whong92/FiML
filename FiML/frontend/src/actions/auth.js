@@ -9,7 +9,7 @@ export const loadUser = () => (dispatch, getState) => {
     //User loading
     dispatch({type: USER_LOADING})
 
-    axios.get('/api/auth/user', tokenConfig(getState))
+    axios.get('/auth/users/me/', tokenConfig(getState))
         .then(res => dispatch({type: USER_LOADED, payload: res.data}))
         .catch( e => {
             dispatch(createError(e.response.data, e.response.Status))
@@ -30,9 +30,12 @@ export const login = (username, password) => (dispatch) => {
     // Request Body
     const body = JSON.stringify({username, password})
 
-    axios.post('/api/auth/login', body, config)
+    axios.post('/auth/token/login/', body, config)
         .then(res => 
             dispatch({type: LOGIN_SUCCESS, payload: res.data}))
+        .then(
+            () => dispatch(loadUser())
+        )
         .catch( e => {
             dispatch(createError(e.response.data, e.response.Status))
             dispatch({type: LOGIN_FAIL})
@@ -40,7 +43,7 @@ export const login = (username, password) => (dispatch) => {
 }
 
 // REGSITER USER
-export const register = ({username, password, email}) => (dispatch) => {
+export const register = ({username, password, re_password, email}) => (dispatch) => {
 
     // Headers
     const config = {
@@ -50,14 +53,22 @@ export const register = ({username, password, email}) => (dispatch) => {
     }
 
     // Request Body
-    const body = JSON.stringify({username, password, email})
+    const body = JSON.stringify({username, password, re_password, email})
 
-    axios.post('/api/auth/register', body, config)
+    axios.post('/auth/users/', body, config)
         .then(res => {
             dispatch({type: REGISTER_SUCCESS, payload: res.data})
             dispatch(createMessage({registerSuccess: `Registration success. Welcome ${username}!`}))
-        })
+        }) // auto login after registration
+        .then(
+            () => {
+                dispatch(login(username, password))
+                dispatch(createMessage({registerSuccess: `Registration success. Welcome ${username}!`}))
+            }
+        )
         .catch( e => {
+            console.log(e)
+            console.log(e.response.data)
             dispatch(createError(e.response.data, e.response.Status))
             dispatch({type: REGISTER_FAIL})
         })    
@@ -65,7 +76,7 @@ export const register = ({username, password, email}) => (dispatch) => {
 
 export const logout = () => (dispatch, getState) => {
 
-    axios.post('/api/auth/logout', null, tokenConfig(getState))
+    axios.post('/auth/token/logout/', null, tokenConfig(getState))
         .then(res => dispatch({type: LOGOUT_SUCCESS}))
         .catch( e => {
             console.log(e.response.Status)

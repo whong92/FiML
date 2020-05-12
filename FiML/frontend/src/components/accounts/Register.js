@@ -11,17 +11,17 @@ class Register extends Component {
         username: '',
         email: '',
         password: '',
-        password2: '',
+        re_password: '',
     }
 
     onSubmit = e => {
         e.preventDefault();
-        const {username, email, password, password2} = this.state;
-        if (password !== password2) {
+        const {username, email, password, re_password} = this.state;
+        if (password !== re_password) {
             this.props.createMessage({passwordsNotMatch: "passwords do not match"})
         } else {
             const newUser = {
-                username, password, email
+                username, password, email, re_password
             };
             this.props.register(newUser);
         }
@@ -35,7 +35,7 @@ class Register extends Component {
             return <Redirect to="/" />;
         }
 
-        const { username, email, password, password2 } = this.state;
+        const { username, email, password, re_password } = this.state;
 
         return (
         <div className="col-md-6 m-auto">
@@ -77,9 +77,9 @@ class Register extends Component {
                 <input
                     type="password"
                     className="form-control"
-                    name="password2"
+                    name="re_password"
                     onChange={this.onChange}
-                    value={password2}
+                    value={re_password}
                 />
                 </div>
                 <div className="form-group">

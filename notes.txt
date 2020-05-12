@@ -10,3 +10,8 @@ https://blog.johnnyreilly.com/2019/04/react-select-with-less-typing-lag.html
 
 async loading??? I think reduces the number of menu items needed
 https://react-select.com/async
+
+djoser docs
+https://djoser.readthedocs.io/_/downloads/en/stable/pdf/
+https://github.com/sunscrapers/djoser
+https://djoser.readthedocs.io/en/latest/base_endpoints.html
