@@ -1,7 +1,7 @@
-import { RATINGS_GET, RATINGS_ADD, RATINGS_PUT, LOGOUT_SUCCESS } from '../actions/types.js'
+import { RATINGS_GET, RATINGS_ADD, RATINGS_PUT, RATINGS_DEL, LOGOUT_SUCCESS } from '../actions/types.js'
 
 const intialState = {
-    ratings: {}
+    ratings: null
 }
 
 const ratingReducer = function(state=intialState, action){
@@ -10,7 +10,6 @@ const ratingReducer = function(state=intialState, action){
             {
                 let ratings = {}
                 action.payload.forEach(r => ratings[r.film] = r)
-                console.log(ratings)
                 return {
                     ...state,
                     ratings: {...ratings}
@@ -21,6 +20,15 @@ const ratingReducer = function(state=intialState, action){
             {
                 let ratings = state.ratings
                 ratings[action.payload.film] = action.payload
+                return {
+                    ...state,
+                    ratings: {...ratings}
+                }
+            }
+        case RATINGS_DEL:
+            {
+                let ratings = state.ratings
+                delete ratings[action.payload.film]
                 return {
                     ...state,
                     ratings: {...ratings}

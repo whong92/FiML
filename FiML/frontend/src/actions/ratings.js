@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RATINGS_ADD, RATINGS_GET, RATINGS_PUT } from './types'
+import { RATINGS_ADD, RATINGS_GET, RATINGS_PUT, RATINGS_DEL } from './types'
 import {createMessage, createError} from './messages'
 import { tokenConfig } from './auth'
 
@@ -50,6 +50,25 @@ export const putRatings = (ratingToPut) => (dispatch, getState) => {
                 dispatch({
                     type: RATINGS_PUT,
                     payload: ratingToPut
+                })
+            }
+        )
+        .catch(e=>dispatch(createError(
+            e.response.data, e.response.status
+        )))
+}
+
+export const delRatings = (ratingToDel) => (dispatch, getState) => {
+
+    axios.delete(`/backend/api/ratings/${ratingToDel.id}/`, tokenConfig(getState))
+        .then(
+            res => {
+                dispatch(createMessage({
+                    createLead: "Deleted a rating"
+                }))
+                dispatch({
+                    type: RATINGS_DEL,
+                    payload: ratingToDel
                 })
             }
         )

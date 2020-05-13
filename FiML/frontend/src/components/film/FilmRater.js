@@ -53,16 +53,16 @@ class RadioButtonsGroup extends Component {
 
 }
 
-const labels = [
-    {label: "Excellent", value: 5, color:green[900]},
-    {label: "", value: 4.5, color:green[700]},
-    {label: "Good", value: 4, color:green[500]},
-    {label: "", value: 3.5, color:green[300]},
-    {label: "Whatever", value: 3, color:yellow[300]},
-    {label: "", value: 2.5, color:amber[600]},
-    {label: "Not great", value: 2, color: orange[600]},
-    {label: "", value: 1.5, color: deepOrange[600]},
-    {label: "Awful", value: 1, color: red[600]},
+export const Labels = [
+    {key:"0", label: "Excellent", value: 5, color:green[900]},
+    {key:"1", label: "", value: 4.5, color:green[700]},
+    {key:"2", label: "Good", value: 4, color:green[500]},
+    {key:"3", label: "", value: 3.5, color:green[300]},
+    {key:"4", label: "Whatever", value: 3, color:yellow[300]},
+    {key:"5", label: "", value: 2.5, color:amber[600]},
+    {key:"6", label: "Not great", value: 2, color: orange[600]},
+    {key:"7", label: "", value: 1.5, color: deepOrange[600]},
+    {key:"8", label: "Awful", value: 1, color: red[600]},
 ]
 
 
@@ -88,7 +88,8 @@ const styles = {
         flex: '1 0 auto',
     },
     cover: {
-        width: 150,
+        maxWidth: 150,
+        maxHeight: 300,
     },
     controls: {
         display: 'flex',
@@ -146,14 +147,16 @@ class FilmRater extends Component {
 
                 <CardMedia
                     className={classes.cover}
-                    image={film.poster}
-                    title="Live from space album cover"
+                    component="img"
+                    width="10"
+                    image={film.poster!=null ? film.poster : "/static/images/cards/poster_placeholder.jpg" }
+                    title="film poster"
                 />
                     
                 <div className={classes.details}>
                 <CardContent className={classes.content} ><h3>{this.props.film.name}</h3></CardContent>
                 <CardActions className={classes.controls} >
-                    <RadioButtonsGroup labels={labels} title="Please choose your rating" handleChange={this.handleRated} value={initalRating}/>
+                    <RadioButtonsGroup labels={Labels} title="Please choose your rating" handleChange={this.handleRated} value={initalRating}/>
                 </CardActions>
                 </div>
 
