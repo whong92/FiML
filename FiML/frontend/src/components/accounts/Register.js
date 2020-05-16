@@ -17,7 +17,10 @@ class Register extends Component {
     onSubmit = e => {
         e.preventDefault();
         const {username, email, password, re_password} = this.state;
-        if (password !== re_password) {
+        if (username=="" || email=="" || password=="" || re_password==""){
+            this.props.createMessage({fieldsRequired: "all fields required"})
+        }
+        else if (password !== re_password) {
             this.props.createMessage({passwordsNotMatch: "passwords do not match"})
         } else {
             const newUser = {

@@ -14,16 +14,17 @@ export class Alerts extends Component {
     componentDidUpdate(prevProps) {
         const { error, alert, message } = this.props;
         if ( error != prevProps.error ){
-
-            if(error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join())
-            if(error.msg.username) alert.error(error.msg.username.join())
-            if(error.msg.username) alert.error(error.msg.password.join())
-
+            // for login
+            if(error.msg.non_field_errors != null) alert.error(error.msg.non_field_errors.join())
+            // for registration
+            if(error.msg.username != null) error.msg.username.forEach(msg => alert.error("username: " + msg))
+            if(error.msg.password != null) error.msg.password.forEach(msg => alert.error("password: " + msg))
+            if(error.msg.email != null) error.msg.email .forEach(msg => alert.error("email: " + msg))
         }
         if (message != prevProps.message) {
-            if(message.createLead) alert.success(message.createLead);
-            if(message.deleteLead) alert.success(message.deleteLead);
+            // everything else within the app
             if(message.passwordsNotMatch) alert.error(message.passwordsNotMatch);
+            if(message.fieldsRequired) alert.error(message.fieldsRequired);
             if(message.registerSuccess) alert.success(message.registerSuccess);
         }
     }

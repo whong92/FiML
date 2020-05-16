@@ -21,7 +21,7 @@ import {grey } from '@material-ui/core/colors';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const alertOptions = {
-    timeout: 3000,
+    timeout: 10000,
     position: 'top center'
 }
 
@@ -60,6 +60,7 @@ export default class App extends Component {
                 <Router>
                     <Fragment>
                         <Header />
+                        <Alerts />
                         <div className="container">
                             <Route exact path = "/" component={Dashboard} />
                             <Route exact path = "/register" component={Register} />

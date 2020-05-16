@@ -31,8 +31,12 @@ export const login = (username, password) => (dispatch) => {
     const body = JSON.stringify({username, password})
 
     axios.post('/auth/token/login/', body, config)
-        .then(res => 
-            dispatch({type: LOGIN_SUCCESS, payload: res.data}))
+        .then(
+            res => {
+                dispatch({type: LOGIN_SUCCESS, payload: res.data})
+                dispatch(createMessage({registerSuccess: `Logged in as: ${username}`}))
+            }
+        )
         .then(
             () => dispatch(loadUser())
         )
@@ -63,7 +67,6 @@ export const register = ({username, password, re_password, email}) => (dispatch)
         .then(
             () => {
                 dispatch(login(username, password))
-                dispatch(createMessage({registerSuccess: `Registration success. Welcome ${username}!`}))
             }
         )
         .catch( e => {
