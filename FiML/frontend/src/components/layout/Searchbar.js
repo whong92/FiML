@@ -61,7 +61,7 @@ class Searchbar extends Component {
         return (
             <Fragment>
             <Select
-                components={{ MenuList: MenuList, Option: CustomOption }}
+                components={{ MenuList: MenuList}}
                 value={selectedOption}
                 onChange={this.handleChange}
                 options={this.props.films.map(film=>({film: film, label: film.name}))}

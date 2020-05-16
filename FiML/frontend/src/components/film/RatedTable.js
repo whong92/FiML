@@ -53,6 +53,8 @@ function ColoredAvatar ({val, col}) { // function component
         rounded: {
             color: '#fff',
             backgroundColor: col,
+            width: 30, height: 30,
+            fontSize: 14,
         },
     }))
     const classes = useStyles()
@@ -102,7 +104,7 @@ class RatedTable extends Component {
         )
         return (
             <Fragment>
-                <h2>My Ratings</h2>
+                <h3>My Ratings</h3>
                 <List dense={true}>
                     {ratingsTab}
                 </List>

@@ -33,28 +33,8 @@ export default class App extends Component {
 
     render() {
 
-        const theme = createMuiTheme({
-            palette: {
-                primary: {
-                    light: '#757ce8',
-                    main: '#3f50b5',
-                    dark: '#002884',
-                    contrastText: '#fff',
-                  },
-                secondary: {
-                    light: grey[100],
-                    main: grey[300],
-                    dark: grey[600],
-                    contrastText: '#fff',
-                },
-              },
-            typography: {
-              fontSize: 12,
-            },
-          });
-        
         return (
-            <ThemeProvider theme={theme}>
+            // <ThemeProvider theme={theme}>
             <Provider store={ store }>
             <AlertProvider template={AlertTemplate} {...alertOptions}>
                 <Router>
@@ -70,7 +50,7 @@ export default class App extends Component {
                 </Router>
             </AlertProvider>
             </Provider>
-            </ThemeProvider>
+            // </ThemeProvider>
 
         )
     }

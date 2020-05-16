@@ -1,19 +1,19 @@
 import React, { Component, Fragment } from 'react'
 import {connect} from 'react-redux'
+import axios from 'axios'
 
 
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 
 import {getRatings, addRatings, putRatings} from '../../actions/ratings'
 import {updateUser} from '../../actions/recommends'
 
-import { green, yellow, amber, orange, deepOrange, red, blue, pink, white, grey } from '@material-ui/core/colors';
-import { withStyles, ThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
+import { green, yellow, amber, orange, deepOrange, red } from '@material-ui/core/colors';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 
 function ColoredRadio (cprops) { // function component
@@ -26,9 +26,16 @@ function ColoredRadio (cprops) { // function component
             },
         },
         checked: {},
-    })((props) => <Radio color="default" {...props} />)
+    })((props) => <Radio color="default" size="small" {...props} />)
     return <StyledRadio {...cprops}/>
 };
+
+const formControlLabelStyles = {
+    label: {
+        fontSize: 13,
+    }
+}
+const StyledFormControlLabel  = withStyles(formControlLabelStyles)(FormControlLabel)
 
 class RadioButtonsGroup extends Component {
 
@@ -36,7 +43,7 @@ class RadioButtonsGroup extends Component {
         const labelList = this.props.labels.map(
         label => {
             const CRadioComp = <ColoredRadio c={label.color}/>
-            return <FormControlLabel color="secondary.contrastText" value={label.value} control={CRadioComp} label={label.label} key={label.value} labelPlacement="bottom" />
+            return <StyledFormControlLabel color="secondary.contrastText" value={label.value} control={CRadioComp} label={label.label} key={label.value} labelPlacement="bottom" />
         })
 
         return (
@@ -76,38 +83,67 @@ const styles = {
     root: {
         display: 'flex',
         justifyContent: 'space-evenly',
-        padding: '20px'
+        padding: '10px'
     },
     details: {
         display: 'flex',
         flexDirection: 'column',
-        marginLeft: '20px',
-        marginRight: '20px'
+        marginLeft: '10px',
+        marginRight: '10px'
     },
     content: {
         flex: '1 0 auto',
     },
     cover: {
-        maxWidth: 150,
-        maxHeight: 300,
+        width: 150,
+        height: 220,
+        marginLeft: '10px',
     },
     controls: {
         display: 'flex',
         alignItems: 'center',
-        padding: '20px'
+        padding: '10px'
     },
 }
 
 class FilmRater extends Component {
 
+    state = {
+        film_desc: null,
+    }
+
+    GetFilmDesc = (film) => {
+        if (film != null) { 
+            axios.get(`/backend/api/films/${film}/`).then(
+                res => {
+                    this.setState({film_desc: res.data.desc})
+                }
+            ).catch(
+                e => {
+                    this.setState({film_desc: 'Failed to get film description'})
+                }
+            )
+        }
+    }
 
     componentDidMount() {
         this.props.getRatings()
+        const {film} = this.props
+        if (film != null) this.GetFilmDesc(film.dataset_id)
     }
 
-    componentDidUpdate(){
-        const {user, ratings} = this.props
-        if (user!=null) {this.props.updateUser(user.id)}
+    componentDidUpdate(prevProps){
+        const {user, ratings, film} = this.props
+        const prevRatings = prevProps.ratings
+        const prevUser = prevProps.user
+        const prevFilm = prevProps.film
+        
+        if (prevRatings != ratings || prevUser != user) {
+            if (user!=null) {this.props.updateUser(user.id)}
+        }
+
+        if (prevFilm != film) this.GetFilmDesc(film.dataset_id)
+
     }
 
     handleRated = (event, value) => {
@@ -138,9 +174,6 @@ class FilmRater extends Component {
         const rating = ratings[film.dataset_id]
         const initalRating = rating==null ? null : rating.rating
 
-        console.log(film)
-
-
         return (
             <div>
                 <Card className={classes.root}>
@@ -154,9 +187,17 @@ class FilmRater extends Component {
                 />
                     
                 <div className={classes.details}>
-                <CardContent className={classes.content} ><h3>{this.props.film.name}</h3></CardContent>
+                <CardContent className={classes.content} >
+                    <h3>{this.props.film.name}</h3> 
+                    <p>{this.state.film_desc}</p>
+                </CardContent>
                 <CardActions className={classes.controls} >
-                    <RadioButtonsGroup labels={Labels} title="Please choose your rating" handleChange={this.handleRated} value={initalRating}/>
+                    <RadioButtonsGroup 
+                        labels={Labels} 
+                        title={`Please choose your rating ` + (initalRating!=null ? `(you last rated this: ${initalRating})` : ``)}
+                        handleChange={this.handleRated} 
+                        value={initalRating}
+                    />
                 </CardActions>
                 </div>
 
