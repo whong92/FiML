@@ -21,4 +21,6 @@ Visit `localhost:8000` to use the recommender!
 
 ## Demo
 
+Demo of FiML in action. Recommendations are shown in the cards under `My recommendations`, with the blue bar underneath each card indicating the model's prediction of the user's preference. The recommendations are ranked by this preference.
+
 ![](demo.gif)
