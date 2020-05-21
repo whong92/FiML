@@ -114,7 +114,7 @@ class FilmRater extends Component {
 
     GetFilmDesc = (film) => {
         if (film != null) { 
-            axios.get(`/backend/api/films/${film}/`).then(
+            axios.get(`/backend/api/filmdetails/${film}/`).then(
                 res => {
                     this.setState({film_desc: res.data.desc})
                 }
@@ -171,7 +171,7 @@ class FilmRater extends Component {
     render() {
 
         const { film, ratings, classes } = this.props
-        const rating = ratings[film.dataset_id]
+        const rating = ratings == null ? null : ratings[film.dataset_id]
         const initalRating = rating==null ? null : rating.rating
 
         return (

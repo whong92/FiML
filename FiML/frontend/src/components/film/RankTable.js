@@ -146,7 +146,7 @@ class RankGrid extends Component {
 
         return (
             <Fragment>
-                <h3>My recommendations</h3>
+                <h3>My Recommendations</h3>
                 <FilmRaterDialog selectedValue={film} open={dialogOpen} onClose={this.handleClose} />
                 <div className="d-flex flex-wrap" style={style}>
                     {disp}

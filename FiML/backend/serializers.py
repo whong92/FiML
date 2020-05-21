@@ -4,7 +4,7 @@ from backend.models import Film, Rating
 class FilmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Film
-        fields = '__all__'
+        fields = ['name', 'dataset_id', 'poster']
 
 class RatingSerializer(serializers.ModelSerializer):
 
@@ -12,4 +12,9 @@ class RatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
+        fields = '__all__'
+
+class FilmDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Film
         fields = '__all__'

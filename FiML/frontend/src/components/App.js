@@ -8,6 +8,8 @@ import {Provider} from 'react-redux';
 import store from '../store'
 import Header from './layout/Header'
 import Dashboard from './film/Dashboard'
+import RatedTable from './film/RatedTable'
+import About from './layout/About'
 import Alerts from './layout/Alerts'
 import Login from './accounts/Login'
 import Register from './accounts/Register'
@@ -16,9 +18,6 @@ import {loadUser} from '../actions/auth'
 // alerts
 import {Provider as AlertProvider} from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
-
-import {grey } from '@material-ui/core/colors';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const alertOptions = {
     timeout: 10000,
@@ -41,8 +40,10 @@ export default class App extends Component {
                     <Fragment>
                         <Header />
                         <Alerts />
-                        <div className="container">
+                        <div className="container" style={{marginTop: 30}}>
                             <Route exact path = "/" component={Dashboard} />
+                            <PrivateRoute exact path = "/ratings" component={RatedTable} />
+                            <Route exact path = "/about" component={About} />
                             <Route exact path = "/register" component={Register} />
                             <Route exact path = "/login" component={Login} />
                         </div>

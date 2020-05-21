@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import {connect} from 'react-redux'
 import {getRatings, delRatings} from '../../actions/ratings'
+import {getFilms} from '../../actions/films'
 
 import {Labels} from './FilmRater'
 
@@ -65,11 +66,12 @@ class RatedTable extends Component {
 
     componentDidMount() {
         this.props.getRatings()
+        this.props.getFilms()
     }
 
     render() {
+
         const {films, ratings, user} = this.props
-        
 
         const ratingsTab = ratings==null || films.length==0 ? null : sortRatings(ratings, films).map(
             ([key, rating]) => (
@@ -119,4 +121,4 @@ const mapStateToProps = state => ({
     ratings: state.ratings.ratings
 });
 
-export default connect(mapStateToProps, {getRatings, delRatings})(RatedTable);
+export default connect(mapStateToProps, {getRatings, delRatings, getFilms})(RatedTable);

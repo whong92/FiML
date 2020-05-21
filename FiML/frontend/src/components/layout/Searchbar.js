@@ -67,7 +67,7 @@ class Searchbar extends Component {
                 options={this.props.films.map(film=>({film: film, label: film.name}))}
                 filterOption={createFilter({ignoreAccents: false})}
             />
-            {form}          
+            {form}         
             </Fragment>
         );
     }
