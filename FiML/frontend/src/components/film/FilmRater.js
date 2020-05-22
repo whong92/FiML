@@ -7,13 +7,10 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-
-import {getRatings, addRatings, putRatings} from '../../actions/ratings'
-import {updateUser} from '../../actions/recommends'
-
 import { green, yellow, amber, orange, deepOrange, red } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+
+import {getRatings, addRatings, putRatings} from '../../actions/ratings'
 
 
 function ColoredRadio (cprops) { // function component
@@ -76,7 +73,6 @@ export const Labels = [
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 
 const styles = {
@@ -137,10 +133,6 @@ class FilmRater extends Component {
         const prevRatings = prevProps.ratings
         const prevUser = prevProps.user
         const prevFilm = prevProps.film
-        
-        if (prevRatings != ratings || prevUser != user) {
-            if (user!=null) {this.props.updateUser(user.id)}
-        }
 
         if (prevFilm != film) this.GetFilmDesc(film.dataset_id)
 
@@ -215,4 +207,5 @@ const mapStateToProps = state => ({
     user: state.auth.user
 });
 
-export default connect(mapStateToProps, {getRatings, addRatings, putRatings, updateUser})(StyledFilmRater);
+
+export default connect(mapStateToProps, {getRatings, addRatings, putRatings})(StyledFilmRater);

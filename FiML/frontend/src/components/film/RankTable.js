@@ -14,8 +14,13 @@ import Paper from '@material-ui/core/Paper';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Pagination from '@material-ui/lab/Pagination'
+import { FilmRaterDialog } from './FilmRaterDialog'
 
-import FilmRater from './FilmRater'
+// settings for pagination
+const TOTAL_DISPLAY = 200
+const PER_PAGE = 50
+const PAGES = Math.ceil(TOTAL_DISPLAY/PER_PAGE)
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -27,13 +32,13 @@ const StyledTableCell = withStyles((theme) => ({
     },
   }))(TableCell);
   
-  const StyledTableRow = withStyles((theme) => ({
+const StyledTableRow = withStyles((theme) => ({
     root: {
-      '&:nth-of-type(odd)': {
+        '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.secondary.main,
-      },
+        },
     },
-  }))(TableRow);
+}))(TableRow);
 
 const styles = {
     root: {
@@ -73,23 +78,6 @@ class FilmCard extends Component {
 
 const StyledFilmCard = withStyles(styles)(FilmCard)
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-
-function FilmRaterDialog(props) {
-    const { onClose, selectedValue, open } = props;
-  
-    const handleClose = () => {
-      onClose(selectedValue);
-    };
-  
-    return (
-      <Dialog fullWidth={true} maxWidth="lg" onClose={handleClose} aria-labelledby="rater-dialog-title" open={open}>
-        <DialogTitle id="rater-dialog-title">Watched before? Rate it!</DialogTitle>
-        {selectedValue==null? null : <FilmRater film={selectedValue} />}
-      </Dialog>
-    );
-  }
   
 
 class RankGrid extends Component {
@@ -101,16 +89,21 @@ class RankGrid extends Component {
 
     state = {
         dialogOpen: false,
-        film: null
+        film: null,
+        page: 1,
     }
 
     setFilmState = (film) => {
-        this.setState({dialogOpen: true, film: film})
+        this.setState({...this.state, dialogOpen: true, film: film})
     }
     
     handleClose = (value) => {
         this.setState({...this.state, dialogOpen: false})
     };
+
+    setPage = (e, page) => {
+        this.setState({...this.state, page: page})
+    }
 
     componentDidMount() {
         this.props.getFilms()
@@ -121,17 +114,20 @@ class RankGrid extends Component {
         
         const {films, recommends} = this.props
         var disp = null
+        const {page} = this.state
+        const start = (page-1)*PER_PAGE
+        const end = page*PER_PAGE
         if (recommends != null) {
             const { dist, rec } = recommends
             if (films.length > 0){
-                disp = rec.map( 
+                disp = rec.slice(start, end).map( 
                     (r, i) => (
                         <div><StyledFilmCard film={films[r]} dist={dist[i]} onClick={this.setFilmState}/></div>
                     )
                 )
             }
         } else {
-            disp = films.slice(0,100).map( 
+            disp = films.slice(start,end).map( 
                 film => (
                     <div><StyledFilmCard film={film} onClick={this.setFilmState}/></div>
                 )
@@ -147,6 +143,7 @@ class RankGrid extends Component {
         return (
             <Fragment>
                 <h3>My Recommendations</h3>
+                <div className="center" style={{margin: "auto", width: 345}}>     <Pagination count={PAGES} onChange={this.setPage} page={this.state.page}/> </div>
                 <FilmRaterDialog selectedValue={film} open={dialogOpen} onClose={this.handleClose} />
                 <div className="d-flex flex-wrap" style={style}>
                     {disp}

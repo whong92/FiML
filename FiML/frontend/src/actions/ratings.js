@@ -2,6 +2,9 @@ import axios from 'axios';
 import { RATINGS_ADD, RATINGS_GET, RATINGS_PUT, RATINGS_DEL } from './types'
 import {createMessage, createError} from './messages'
 import { tokenConfig } from './auth'
+import {updateUser} from './recommends'
+
+// TODO: figure out how to synchronize django and 
 
 export const getRatings = () => (dispatch, getState) => {
     axios.get('/backend/api/ratings/', tokenConfig(getState))
@@ -21,6 +24,7 @@ export const getRatings = () => (dispatch, getState) => {
 }
 
 export const addRatings = (ratingToAdd) => (dispatch, getState) => {
+    const user = getState().auth.user;
     console.log(ratingToAdd)
     axios.post('/backend/api/ratings/', ratingToAdd, tokenConfig(getState))
         .then(
@@ -34,6 +38,10 @@ export const addRatings = (ratingToAdd) => (dispatch, getState) => {
                 })
             }
         )
+        .then(
+            // forgive me lord for I have sinned
+            setTimeout(()=>{dispatch(updateUser(user.id))}, 200) 
+        )
         .catch(e=>dispatch(createError(
             e.response.data, e.response.status
         )))
@@ -41,6 +49,7 @@ export const addRatings = (ratingToAdd) => (dispatch, getState) => {
 
 export const putRatings = (ratingToPut) => (dispatch, getState) => {
 
+    const user = getState().auth.user;
     axios.put(`/backend/api/ratings/${ratingToPut.id}/`, ratingToPut, tokenConfig(getState))
         .then(
             res => {
@@ -53,6 +62,9 @@ export const putRatings = (ratingToPut) => (dispatch, getState) => {
                 })
             }
         )
+        .then(
+            setTimeout(()=>{dispatch(updateUser(user.id))}, 200)
+        )
         .catch(e=>dispatch(createError(
             e.response.data, e.response.status
         )))
@@ -60,6 +72,7 @@ export const putRatings = (ratingToPut) => (dispatch, getState) => {
 
 export const delRatings = (ratingToDel) => (dispatch, getState) => {
 
+    const user = getState().auth.user;
     axios.delete(`/backend/api/ratings/${ratingToDel.id}/`, tokenConfig(getState))
         .then(
             res => {
@@ -71,6 +84,9 @@ export const delRatings = (ratingToDel) => (dispatch, getState) => {
                     payload: ratingToDel
                 })
             }
+        )
+        .then(
+            setTimeout(()=>{dispatch(updateUser(user.id))}, 200)
         )
         .catch(e=>dispatch(createError(
             e.response.data, e.response.status

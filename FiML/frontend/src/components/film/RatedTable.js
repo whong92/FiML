@@ -4,6 +4,7 @@ import {getRatings, delRatings} from '../../actions/ratings'
 import {getFilms} from '../../actions/films'
 
 import {Labels} from './FilmRater'
+import { FilmRaterDialog } from './FilmRaterDialog'
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -64,6 +65,21 @@ function ColoredAvatar ({val, col}) { // function component
 
 class RatedTable extends Component {
 
+    state = {
+        dialogOpen: false,
+        film: null,
+        page: 1,
+    }
+
+    setFilmState = (film) => {
+        console.log(film)
+        this.setState({...this.state, dialogOpen: true, film: film})
+    }
+    
+    handleClose = (value) => {
+        this.setState({...this.state, dialogOpen: false})
+    };
+
     componentDidMount() {
         this.props.getRatings()
         this.props.getFilms()
@@ -72,6 +88,7 @@ class RatedTable extends Component {
     render() {
 
         const {films, ratings, user} = this.props
+        const {dialogOpen, film} = this.state
 
         const ratingsTab = ratings==null || films.length==0 ? null : sortRatings(ratings, films).map(
             ([key, rating]) => (
@@ -87,7 +104,7 @@ class RatedTable extends Component {
                     <ListItem
                         button
                         // selected={selectedIndex === 3} // nothing happens yet
-                        // onClick={(event) => handleListItemClick(event, 3)}
+                        onClick={(event) => this.setFilmState(films[rating.film])}
                     >
                         <ListItemText primary={films[rating.film].name} />
                     </ListItem>
@@ -104,9 +121,11 @@ class RatedTable extends Component {
 
             )
         )
+        
         return (
             <Fragment>
                 <h3>My Ratings</h3>
+                <FilmRaterDialog selectedValue={film} open={dialogOpen} onClose={this.handleClose} />
                 <List dense={true}>
                     {ratingsTab}
                 </List>
