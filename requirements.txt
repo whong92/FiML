@@ -1,0 +1,5 @@
+django
+django-rest-knox
+djangorestframework
+django-cors-headers
+djoser

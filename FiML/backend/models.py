@@ -8,6 +8,7 @@ class Film(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     poster = models.CharField(max_length=512, blank=True, null=True)
     desc = models.TextField(blank=True, null=True)
+    mean_rating = models.FloatField(null=False, default=0.)
 
 # TODO: https://stackoverflow.com/questions/2201598/how-to-define-two-fields-unique-as-couple when add users
 class Rating(models.Model):
