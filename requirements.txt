@@ -3,3 +3,4 @@ django-rest-knox
 djangorestframework
 django-cors-headers
 djoser
+git+https://github.com/whong92/recommender.git
