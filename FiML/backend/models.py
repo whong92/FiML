@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Film(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=512)
     dataset_id = models.IntegerField(unique=True, primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     poster = models.CharField(max_length=512, blank=True, null=True)

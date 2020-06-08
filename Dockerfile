@@ -1,11 +1,14 @@
 FROM tensorflow/tensorflow:latest-py3
 
-ADD . /opt/FiML/
-WORKDIR /opt/FiML
+ADD ./requirements.txt ./
 
 RUN apt-get -y update && \
     apt install -y git && \
+    apt install -y libpq-dev && \
     pip install -r requirements.txt
+
+ADD . /opt/FiML/
+WORKDIR /opt/FiML
 
 RUN useradd -m myuser
 
@@ -14,6 +17,7 @@ RUN /bin/bash -c 'chmod a+x /opt/FiML/run.sh'
 
 USER myuser
 
+ENV DJANGO_SETTINGS_MODULE=FiML.settings_gcp
 WORKDIR /opt/FiML
 
 CMD ["/bin/sh", "/opt/FiML/run.sh"]

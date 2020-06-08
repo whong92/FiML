@@ -94,3 +94,6 @@ jspm_packages/
 # Optional eslint cache
 .eslintcache
 
+# GCP stuff
+gcp/*
+FiML/FiML/settings_gcp.py

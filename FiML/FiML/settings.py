@@ -25,7 +25,7 @@ SECRET_KEY = 'd(i+-1*#yvx%@o9f*w&td18c5zzzfu)j^w+=#)c86#(j-btqh1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "fiml.herokuapp.com"]
+ALLOWED_HOSTS = ["0.0.0.0", "fiml.herokuapp.com", "fiml2.herokuapp.com"]
 
 CORS_ORIGIN_ALLOW_ALL=True
 
@@ -98,13 +98,25 @@ WSGI_APPLICATION = 'FiML.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# sqlite 3
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+# local postgres
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'fiml',
+        'USER': 'ong',
+        'PASSWORD': 'rhymestersuper',
+        'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
