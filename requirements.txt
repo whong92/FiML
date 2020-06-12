@@ -4,4 +4,5 @@ djangorestframework
 django-cors-headers
 djoser
 psycopg2
-git+https://github.com/whong92/recommender.git
+uwsgi
+requests
