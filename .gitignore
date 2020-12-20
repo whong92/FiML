@@ -51,6 +51,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 *.sqlite3
+# *.sql
 
 ########## Node js
 
@@ -96,4 +97,8 @@ jspm_packages/
 
 # GCP stuff
 gcp/*
-FiML/FiML/settings_gcp.py
+FiML/FiML/settings_deploy.py
+
+# Editor stuff
+.idea/
+.vscode/

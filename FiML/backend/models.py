@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import json
+from django.contrib.postgres.fields import JSONField
 
 # Create your models here.
 class Film(models.Model):
@@ -19,3 +21,9 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('film', 'user',)
+
+class Recommendations(models.Model):
+
+    recommendations = JSONField()
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, related_name="recommendations", on_delete=models.CASCADE, null=False, default=-1, unique=True, primary_key=True)

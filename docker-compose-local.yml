@@ -1,0 +1,22 @@
+version: "3"
+services:
+  fiml:
+    image: fiml-local
+    environment:
+      - PORT=5000
+    ports:
+      - 8000:8000
+    restart: always
+    network_mode: "host"
+  reclibwh:
+    image: reclibwh
+    ports:
+      - 5000:5000
+    restart: always
+    network_mode: "host"
+  fimlproxy:
+    image: fimlproxy-local
+    ports:
+      - 8080:8080
+    restart: always
+    network_mode: "host"

@@ -9,23 +9,11 @@ from django.conf import settings
 # views that redirect to the reclibwh backend
 
 @csrf_exempt
-def user_recommend(request):
+def update_and_recommend(request):
 
     if request.method == 'POST':
         req = json.loads(request.body)
-        resp = requests.post(settings.RECOMMENDER_ENDPOINT+'user_recommend', json=req)
-        resp.raise_for_status()
-        return JsonResponse(resp.json())
-    else:
-        return HttpResponseNotFound('Go to gulag!')
-
-
-@csrf_exempt
-def user_update(request):
-
-    if request.method == 'POST':
-        req = json.loads(request.body)
-        resp = requests.post(settings.RECOMMENDER_ENDPOINT+'user_update', json=req)
+        resp = requests.post(settings.RECOMMENDER_ENDPOINT+'update_and_recommend', json=req)
         resp.raise_for_status()
         return JsonResponse(resp.json())
     else:

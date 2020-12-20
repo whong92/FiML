@@ -25,7 +25,7 @@ SECRET_KEY = 'd(i+-1*#yvx%@o9f*w&td18c5zzzfu)j^w+=#)c86#(j-btqh1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "fiml.herokuapp.com", "fiml2.herokuapp.com"]
+ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 CORS_ORIGIN_ALLOW_ALL=True
 
@@ -98,14 +98,6 @@ WSGI_APPLICATION = 'FiML.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# sqlite 3
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 # local postgres
 DATABASES = {
     'default': {
@@ -113,7 +105,7 @@ DATABASES = {
         'NAME': 'fiml',
         'USER': 'ong',
         'PASSWORD': 'rhymestersuper',
-        'HOST': 'localhost',
+        'HOST': '0.0.0.0',
         'PORT': '5433',
     }
 }
@@ -156,5 +148,4 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 
-# Recommender AWS instance connection
-RECOMMENDER_ENDPOINT = 'http://localhost:8000/'
+RECOMMENDER_ENDPOINT = 'http://0.0.0.0:5000/'

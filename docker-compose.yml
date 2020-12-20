@@ -1,0 +1,23 @@
+version: "3"
+services:
+    fimlproxy:
+        image: fimlproxy
+        ports:
+            - 8080:8080
+        restart: always
+
+    reclibwh:
+      depends_on:
+        - fimlproxy
+      image: reclibwh
+      ports:
+        - 5000:5000
+      restart: always
+
+    fiml:
+      depends_on:
+        - fimlproxy
+      image: fiml
+      ports:
+        - 8000:8000
+      restart: always

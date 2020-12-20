@@ -1,3 +1,6 @@
 .vscode
 .git
 node_modules
+nginx
+Makefile
+Dockerfile

@@ -6,3 +6,4 @@ djoser
 psycopg2
 uwsgi
 requests
+gunicorn

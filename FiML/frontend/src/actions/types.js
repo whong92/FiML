@@ -4,6 +4,7 @@ export const RATINGS_ADD = 'RATINGS_ADD';
 export const RATINGS_PUT = 'RATINGS_PUT';
 export const RATINGS_DEL = 'RATINGS_DEL';
 export const RECOMMENDS_GET = 'RECOMMENDS_GET';
+export const RECOMMENDS_ADD = 'RECOMMENDS_ADD';
 
 // errors and messages
 export const GET_ERRORS = 'GET_ERRORS';

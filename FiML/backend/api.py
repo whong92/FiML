@@ -1,6 +1,6 @@
-from backend.models import Film, Rating
+from backend.models import Film, Rating, Recommendations
 from rest_framework import viewsets, permissions
-from .serializers import FilmSerializer, RatingSerializer, FilmDetailsSerializer
+from .serializers import FilmSerializer, RatingSerializer, FilmDetailsSerializer, RecommendationsSerializer
 
 # Lead ViewSets
 
@@ -25,5 +25,18 @@ class RatingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
     
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+class RecommendationsViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = RecommendationsSerializer
+
+    def get_queryset(self):
+        return self.request.user.recommendations.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
