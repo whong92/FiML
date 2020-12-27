@@ -148,4 +148,4 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
 
-RECOMMENDER_ENDPOINT = 'http://0.0.0.0:5000/'
+RECOMMENDER_ENDPOINT = 'http://0.0.0.0:8080/reclibwh/'

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { RECOMMENDS_GET, RECOMMENDS_ADD } from './types'
 import { tokenConfig } from './auth'
+import {createError, createMessage} from './messages'
 
 // TODO include a timestamp to each recommend update, so see which is fresher!
 
@@ -18,7 +19,12 @@ export const getRecommends = () => (dispatch, getState) => {
                 }
             }
         )
-        .catch(e => console.log(e))
+        .catch(
+            e => {
+                dispatch(createError({api: "failed to fetch your recommendations"}, e.response.status))
+                console.log(e)
+            }
+        )
 }
 
 export const addRecommends = (recommends) => (dispatch, getState) => {
@@ -34,7 +40,7 @@ export const addRecommends = (recommends) => (dispatch, getState) => {
             }
         )
         .catch(e => {
-            dispatch(createError(e.response.data, e.response.status))
+            dispatch(createError({api: "failed to update your recommendations"}, e.response.status))
             console.log(e)
         })
 }
@@ -52,7 +58,7 @@ export const putRecommends = (user_id, recommends) => (dispatch, getState) => {
             }
         )
         .catch(e => {
-            dispatch(createError(e.response.data, e.response.status))
+            dispatch(createError({api: "failed to update your recommendations"}, e.response.status))
             console.log(e)
         })
 }
@@ -85,7 +91,6 @@ export const updateUser = (user) => (dispatch, getState) => {
         })
         .then(
             res => {
-                console.log(recs)
                 if (recs) {
                     dispatch(putRecommends(user, {'recommendations': res.data[user]})) // TODO: only add if not outdated?
                 } else {
@@ -93,5 +98,10 @@ export const updateUser = (user) => (dispatch, getState) => {
                 }
             }
         )
-        .catch(e => console.log(e))
+        .catch(
+            e => {
+                dispatch(createError({api: "failed to update your recommendations"}, e.response.status))
+                console.log(e)
+            }
+        )
 }

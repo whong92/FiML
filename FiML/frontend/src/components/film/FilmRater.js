@@ -145,6 +145,11 @@ class FilmRater extends Component {
         const film = this.props.film
         const ratings = this.props.ratings
 
+        if (ratings == null) {
+            console.log("ratings is null")
+            return
+        }
+
         if (!(film.dataset_id in ratings)) {
             this.props.addRatings({
                 film: film.dataset_id,

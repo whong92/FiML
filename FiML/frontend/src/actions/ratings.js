@@ -18,7 +18,7 @@ export const getRatings = () => (dispatch, getState) => {
         )
         .catch(e=>{
             dispatch(createError(
-                e.response.data, e.response.status
+                {api: "failed to get your ratings"}, e.response.status
             ))
         })
 }
@@ -43,7 +43,7 @@ export const addRatings = (ratingToAdd) => (dispatch, getState) => {
             setTimeout(()=>{dispatch(updateUser(user.id))}, 200) 
         )
         .catch(e=>dispatch(createError(
-            e.response.data, e.response.status
+            {api: "failed to add your rating"}, e.response.status
         )))
 }
 
@@ -66,7 +66,7 @@ export const putRatings = (ratingToPut) => (dispatch, getState) => {
             setTimeout(()=>{dispatch(updateUser(user.id))}, 200)
         )
         .catch(e=>dispatch(createError(
-            e.response.data, e.response.status
+            {api: "failed to update your rating"}, e.response.status
         )))
 }
 
@@ -89,6 +89,6 @@ export const delRatings = (ratingToDel) => (dispatch, getState) => {
             setTimeout(()=>{dispatch(updateUser(user.id))}, 200)
         )
         .catch(e=>dispatch(createError(
-            e.response.data, e.response.status
+            {api: "failed to delete your rating"}, e.response.status
         )))
 }

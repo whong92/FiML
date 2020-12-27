@@ -126,7 +126,7 @@ class RankGrid extends Component {
                     )
                 )
             }
-        } else {
+        } else if (films.length > 0){
             disp = films.slice(start,end).map( 
                 film => (
                     <div><StyledFilmCard film={film} onClick={this.setFilmState}/></div>

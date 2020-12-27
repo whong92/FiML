@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { FILMS_GET } from './types'
+import {createError, createMessage} from './messages'
 
 export const getFilms = () => dispatch => {
 
@@ -12,5 +13,12 @@ export const getFilms = () => dispatch => {
                 })
             }
         )
-        .catch(e => console.log(e))
+        .catch(
+            e => {
+                console.log(e)
+                dispatch(createError(
+                    {api: "failed to fetch films"}, e.response.status
+                ))
+            }
+        )
 }

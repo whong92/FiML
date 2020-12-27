@@ -12,7 +12,9 @@ export const loadUser = () => (dispatch, getState) => {
     axios.get('/auth/users/me/', tokenConfig(getState))
         .then(res => dispatch({type: USER_LOADED, payload: res.data}))
         .catch( e => {
-            dispatch(createError(e.response.data, e.response.Status))
+            if (e.response.status != 401) { // only report error if its not a unauthorized (expected before login)
+                dispatch(createError({api: "failed to load user info"}, e.response.status))
+            }
             dispatch({type: AUTH_ERROR})
         })    
 }
@@ -41,7 +43,7 @@ export const login = (username, password) => (dispatch) => {
             () => dispatch(loadUser())
         )
         .catch( e => {
-            dispatch(createError(e.response.data, e.response.Status))
+            dispatch(createError({api: "failed to login"}, e.response.status))
             dispatch({type: LOGIN_FAIL})
         })    
 }
@@ -72,7 +74,7 @@ export const register = ({username, password, re_password, email}) => (dispatch)
         .catch( e => {
             console.log(e)
             console.log(e.response.data)
-            dispatch(createError(e.response.data, e.response.Status))
+            dispatch(createError({api: "failed to register user"}, e.response.status))
             dispatch({type: REGISTER_FAIL})
         })    
 }
@@ -82,8 +84,8 @@ export const logout = () => (dispatch, getState) => {
     axios.post('/auth/token/logout/', null, tokenConfig(getState))
         .then(res => dispatch({type: LOGOUT_SUCCESS}))
         .catch( e => {
-            console.log(e.response.Status)
-            dispatch(createError(e.response.data, e.response.Status))
+            dispatch(createError({api: "failed to properly logout user"}, e.response.status))
+            dispatch(createError(e.response.data, e.response.status))
         })    
 }
 

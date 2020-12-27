@@ -28,7 +28,7 @@ get_all:
 	docker pull $(DOCKER_TAG)fimlproxy\:latest
 
 up_local:
-	docker-compose -f docker-compose-local.yml up
+	docker-compose -f docker-compose-local.yml up -d
 
 up:
-	docker-compose -f docker-compose.yml up
+	docker-compose -f docker-compose.yml up -d
