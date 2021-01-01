@@ -12,6 +12,7 @@ export const loadUser = () => (dispatch, getState) => {
     axios.get('/auth/users/me/', tokenConfig(getState))
         .then(res => dispatch({type: USER_LOADED, payload: res.data}))
         .catch( e => {
+            console.log(e)
             if (e.response.status != 401) { // only report error if its not a unauthorized (expected before login)
                 dispatch(createError({api: "failed to load user info"}, e.response.status))
             }

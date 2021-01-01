@@ -106,7 +106,7 @@ DATABASES = {
         'USER': 'ong',
         'PASSWORD': 'rhymestersuper',
         'HOST': '0.0.0.0',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import {connect} from 'react-redux'
 import Select, { createFilter } from 'react-select';
-import {getFilms} from '../../actions/films'
+import {getFilms, selectFilm} from '../../actions/films'
 import FilmRater from '../film/FilmRater'
 
 const CustomOption = ({ innerProps, data, isFocused, children }) => {
@@ -42,21 +42,19 @@ class Searchbar extends Component {
     };
 
     handleChange = selectedOption => {
-        this.setState(
-        { selectedOption },
-        () => console.log(`Option selected:`, this.state.selectedOption)
-        );
+        this.props.selectFilm(selectedOption)
+        this.setState({ selectedOption });
     };
 
     componentDidMount() {
         this.props.getFilms()
     }
 
-    
     render() {
 
         const { selectedOption } = this.state;
-        const form = (selectedOption==null ? null : <FilmRater film={selectedOption.film} />)
+        const selected_film = this.props.selected_film
+        const form = (selected_film==null ? null : <FilmRater film={selected_film} />)
 
         return (
             <Fragment>
@@ -76,6 +74,7 @@ class Searchbar extends Component {
 
 const mapStateToProps = state => ({
     films: state.films.films,
+    selected_film: state.films.selected_film
 });
 
-export default connect(mapStateToProps, {getFilms})(Searchbar);
+export default connect(mapStateToProps, {getFilms, selectFilm})(Searchbar);

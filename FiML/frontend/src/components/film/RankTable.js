@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import {connect} from 'react-redux'
-import {getFilms} from '../../actions/films'
+import {getFilms, selectFilm} from '../../actions/films'
 import {getRecommends} from '../../actions/recommends'
+import {getSimilars} from '../../actions/similars'
+
 import PropTypes from 'prop-types'
 
 import Table from '@material-ui/core/Table';
@@ -11,6 +13,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+
+import Box from '@material-ui/core/Box';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -57,7 +63,6 @@ class FilmCard extends Component {
     render() {
 
         const { classes, film, dist } = this.props
-        
         return (
                 <Card className={classes.root}>
 
@@ -65,7 +70,7 @@ class FilmCard extends Component {
                 <CardMedia className={classes.media}
                     component="img"
                     width="10"
-                    image={ film.poster!=null ? film.poster : "/static/images/cards/poster_placeholder.jpg" }
+                    image={ (film.poster!=null && film.poster!="NaN") ? film.poster : "/static/images/cards/poster_placeholder.jpg" }
                     title="film poster"
                 />
                 </CardActionArea>
@@ -78,9 +83,142 @@ class FilmCard extends Component {
 
 const StyledFilmCard = withStyles(styles)(FilmCard)
 
-  
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
 
-class RankGrid extends Component {
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+        {value === index && (
+            <Box p={3}>
+            {children}
+            </Box>
+        )}
+        </div>
+    );
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+
+const dsu = (arr1, arr2) => arr1
+  .map((item, index) => [arr2[index], item]) // add the args to sort by
+  .sort(([arg1], [arg2]) => arg2 - arg1) // sort by the args
+  .map(([, item]) => item); // extract the sorted items
+
+function combine(rec0, rec1) {
+    var itemset1 = {}
+    for (var i=0; i<rec1.rec.length; i++) {
+        itemset1[rec1.rec[i]] = rec1.dist[i]
+    }
+
+    var combineDist = []
+    var combineItems = []
+    for (var i=0; i<rec0.rec.length; i++) {
+        combineItems.push(rec0.rec[i])
+        var score = 0.0
+        if (itemset1[rec0.rec[i]] != null ) {
+            score = itemset1[rec0.rec[i]] * rec0.dist[i]
+        }
+        combineDist.push(score)
+    }
+
+    var itemset0 = new Set(rec0.rec)
+    for (var i=0; i<rec1.rec.length; i++) {
+        if (itemset0.has(rec1.rec[i]) ) continue
+        combineItems.push(rec1.rec[i])
+        combineDist.push(0.0)
+    }
+
+    combineItems = dsu(combineItems, combineDist)
+    combineDist = combineDist.sort()
+    combineDist.reverse()
+
+    return {'rec': combineItems, 'dist': combineDist}
+}
+
+class _MultiRankGrid extends Component {
+
+    static propTypes = {
+        getSimilars: PropTypes.func.isRequired,
+    }
+
+    state = {
+        tab: 0, selected_film: null
+    }
+
+    handleChange = (event, tabLabel) => {
+        this.setState({...this.state, tab: tabLabel})
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.selected_film == null) return;
+        if (!(this.state.tab == 1 || this.state.tab == 2)) return;
+        if (
+            this.props.selected_film !== prevProps.selected_film ||
+            ( (this.state.tab !== prevState.tab) )
+        ) {
+            this.props.getSimilars(this.props.selected_film.dataset_id);
+        }
+    }
+
+
+    render() {
+        const {tab} = this.state
+        const {recommends, similar_items} = this.props
+        var bal = null
+        if (recommends != null && similar_items != null) {
+            bal = combine(recommends, similar_items)
+        }
+
+        return(
+            <Fragment>
+
+                <Tabs
+                    value={tab}
+                    onChange={this.handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                    <Tab label="Recommended" />
+                    <Tab label="Related" />
+                    <Tab label="Balanced" />
+                </Tabs>
+
+                <TabPanel value={tab} index={0}>
+                  <RankGrid recommends={recommends}/>
+                </TabPanel>
+                <TabPanel value={tab} index={1}>
+                  <RankGrid recommends={similar_items}/>
+                </TabPanel>
+                <TabPanel value={tab} index={2}>
+                  <RankGrid recommends={bal}/>
+                </TabPanel>
+
+            </Fragment>
+        )
+
+    }
+}
+
+const mapStateToPropsMRG = state => ({
+    selected_film: state.films.selected_film,
+    similar_items: state.similars.similars,
+    recommends: state.recommends.recommends
+});
+
+export const MultiRankGrid = connect(mapStateToPropsMRG, {getSimilars})(_MultiRankGrid);
+
+class _RankGrid extends Component {
 
     static propTypes = {
         films: PropTypes.array.isRequired,
@@ -121,9 +259,9 @@ class RankGrid extends Component {
             const { dist, rec } = recommends
             if (films.length > 0){
                 disp = rec.slice(start, end).map( 
-                    (r, i) => (
-                        <div><StyledFilmCard film={films[r]} dist={dist[i]} onClick={this.setFilmState}/></div>
-                    )
+                    (r, i) => {
+                        return <div><StyledFilmCard film={films[r]} dist={dist[i]} onClick={this.setFilmState}/></div>
+                    }
                 )
             }
         } else if (films.length > 0){
@@ -142,7 +280,6 @@ class RankGrid extends Component {
 
         return (
             <Fragment>
-                <h3>My Recommendations</h3>
                 <div className="center" style={{margin: "auto", width: 345}}>     <Pagination count={PAGES} onChange={this.setPage} page={this.state.page}/> </div>
                 <FilmRaterDialog selectedValue={film} open={dialogOpen} onClose={this.handleClose} />
                 <div className="d-flex flex-wrap" style={style}>
@@ -154,75 +291,9 @@ class RankGrid extends Component {
 
 }
 
-class RankTable extends Component {
-
-    static propTypes = {
-        films: PropTypes.array.isRequired,
-        getFilms: PropTypes.func.isRequired
-    }
-
-    componentDidMount() {
-        this.props.getFilms()
-    }
-
-    render() {
-        
-        const {films, recommends} = this.props
-        var disp = null
-        if (recommends != null) {
-            const { dist, rec } = recommends
-            if (films.length > 0){
-                disp = rec.map( 
-                    (r, i) => (
-                    
-                    <StyledTableRow key={ films[r].dataset_id }>
-                        <StyledTableCell>{ films[r].dataset_id }</StyledTableCell>
-                        <StyledTableCell>{ films[r].name }</StyledTableCell>
-                        <StyledTableCell>{ dist[i] }</StyledTableCell>
-                    </StyledTableRow>
-                    )
-                )
-            }
-        } else {
-            disp = films.slice(0,100).map( 
-                film => (
-                <TableRow key={ film.dataset_id }>
-                    <TableCell>{ film.dataset_id }</TableCell>
-                    <TableCell>{ film.name }</TableCell>
-                    <TableCell>{ 0 }</TableCell>
-                </TableRow>
-                )
-            )
-        }
-
-        return (
-            <Fragment>
-                <h1>FiML</h1>
-                <StyledFilmCard />
-                <TableContainer component={Paper}>
-                <Table aria-label="simple table"> 
-                    <TableHead>
-                        <TableRow key={ "headers" }>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Score</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {disp}
-                    </TableBody>
-                    
-                </Table> </TableContainer>
-            </Fragment>
-        )
-    }
-}
-
 const mapStateToProps = state => ({
-    user: state.auth.user,
     films: state.films.films,
-    recommends: state.recommends.recommends,
-    ratings: state.ratings.ratings
+    selected_film: state.films.selected_film
 });
 
-export default connect(mapStateToProps, {getFilms, getRecommends})(RankGrid);
+export const RankGrid = connect(mapStateToProps, {getFilms, selectFilm})(_RankGrid);

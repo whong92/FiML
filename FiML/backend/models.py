@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import json
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 
 # Create your models here.
 class Film(models.Model):
@@ -27,3 +27,10 @@ class Recommendations(models.Model):
     recommendations = JSONField()
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, related_name="recommendations", on_delete=models.CASCADE, null=False, default=-1, unique=True, primary_key=True)
+
+class SimilarItems(models.Model):
+
+    similar_items = JSONField()
+    updated_at = models.DateTimeField(auto_now=True)
+    film = models.ForeignKey(Film, related_name="similar_items", on_delete=models.CASCADE, null=False, default=-1,
+                             unique=True, primary_key=True)

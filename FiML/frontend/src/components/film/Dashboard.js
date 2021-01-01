@@ -1,12 +1,12 @@
 import React, { Fragment, Component } from 'react';
-import RankGrid from './RankTable'
+import {RankGrid, MultiRankGrid} from './RankTable'
 import Searchbar from '../layout/Searchbar'
 import RatedTable from './RatedTable'
 import About from '../layout/About'
 import {connect} from 'react-redux'
 import {getRecommends} from '../../actions/recommends'
 import {getRatings} from '../../actions/ratings'
-
+import {getSimilars} from '../../actions/similars'
 
 class Dashboard extends Component{
 
@@ -27,7 +27,7 @@ class Dashboard extends Component{
                 <Fragment>
                     <Searchbar />
                     <div style={{marginTop: 20}}>
-                        <RankGrid />
+                        <MultiRankGrid />
                     </div>
                 </Fragment>
             );
@@ -44,4 +44,4 @@ const mapStateToProps = state => ({
     user: state.auth.user
 });
 
-export default connect(mapStateToProps, {getRecommends, getRatings})(Dashboard);
+export default connect(mapStateToProps, {getRecommends, getRatings, getSimilars})(Dashboard);

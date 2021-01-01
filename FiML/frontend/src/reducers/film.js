@@ -1,7 +1,8 @@
-import { FILMS_GET } from '../actions/types.js'
+import { FILMS_GET, FILM_SELECT } from '../actions/types.js'
 
 const intialState = {
-    films: []
+    films: [],
+    selected_film: null
 }
 
 const filmReducer = function(state=intialState, action){
@@ -15,8 +16,15 @@ const filmReducer = function(state=intialState, action){
                 ...state,
                 films: films
             }
+        case FILM_SELECT:
+            var f = action.payload.film
+            return {
+                ...state,
+                selected_film: {name: f.name, dataset_id: f.dataset_id, poster: f.poster}
+            }
         default:
             return state
+
     }
 }
 
